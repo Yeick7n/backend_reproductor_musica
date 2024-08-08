@@ -41,7 +41,9 @@ export class UsuariosService {
     }
 
     getUsuarios() {
-        return this.usuariosRepository.find()
+        return this.usuariosRepository.find({
+            relations: ['playlists']
+        });
     }
 
     async getUsuario(id: number) {
@@ -49,6 +51,7 @@ export class UsuariosService {
             where: {
                 id,
             },
+            relations: ['playlists']
         });
 
         if(!usuarioFound) {

@@ -25,6 +25,8 @@ export class PlayListsService {
       where: {
         id,
       },
+
+      relations: ['usuario']
     });
 
     if(!playlistFound) {

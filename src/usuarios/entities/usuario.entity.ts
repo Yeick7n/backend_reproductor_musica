@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { PlayList } from "src/play-lists/entities/play-list.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Usuario {
@@ -9,7 +10,7 @@ export class Usuario {
     @Column()
     nombre: string;
 
-    @Column({ unique: true})
+    @Column({ unique: true })
     usuario: string;
 
     @Column()
@@ -17,4 +18,7 @@ export class Usuario {
 
     @Column()
     contraseña: string;
+
+    @OneToMany(() => PlayList, playlist => playlist.usuario)
+    playlists: PlayList[];
 }

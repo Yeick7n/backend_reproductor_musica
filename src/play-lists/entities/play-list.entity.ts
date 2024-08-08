@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Usuario } from "src/usuarios/entities/usuario.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class PlayList {
@@ -8,4 +9,7 @@ export class PlayList {
 
     @Column()
     nombre: string;
+
+    @ManyToOne(() => Usuario, usuario => usuario.playlists)
+    usuario: Usuario
 }
