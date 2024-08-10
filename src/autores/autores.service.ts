@@ -28,7 +28,9 @@ export class AutoresService {
     }
 
     getAutores() {
-        return this.autoresRepository.find()
+        return this.autoresRepository.find({
+            relations: ['albums','canciones']
+        })
     }
 
     async getAutor(id: number) {
@@ -36,6 +38,7 @@ export class AutoresService {
             where: {
                 id,
             },
+            relations: ['albums','canciones']
         });
 
         if(!autorFound) {

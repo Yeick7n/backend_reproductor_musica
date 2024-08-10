@@ -21,6 +21,7 @@ export class AlbumsService {
             where: {
                 id,
             },
+            relations: ['autor','canciones']
         });
 
         if(!albumFound) {
@@ -31,7 +32,9 @@ export class AlbumsService {
     }
 
     getAlbums() {
-        return this.albumRepository.find()
+        return this.albumRepository.find({
+            relations: ['autor','canciones']
+        })
     }
 
     async updateAlbum(id: number, album: UpdateAlbumDto) {

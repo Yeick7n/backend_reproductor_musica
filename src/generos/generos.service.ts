@@ -20,16 +20,20 @@ export class GenerosService {
             where: {
                 id,
             },
+            relations: ['canciones']
         });
 
         if(!generoFound) {
             return new HttpException('Genero no encontrado', HttpStatus.NOT_FOUND)
         }
+        
         return generoFound;
     }
 
     getGeneros() {
-        return this.generoRepository.find()
+        return this.generoRepository.find({
+            relations: ['canciones']
+        });
     }
 
     async updateGenero(id: number, genero: UpdateGeneroDto) {

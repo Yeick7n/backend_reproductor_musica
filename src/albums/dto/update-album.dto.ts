@@ -1,11 +1,23 @@
 /* eslint-disable prettier/prettier */
-import { IsDate, IsString } from "class-validator";
+import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+import { Autor } from "src/autores/entities/autor.entity";
+import { Cancion } from "src/canciones/entities/cancion.entity";
 
 export class UpdateAlbumDto {
 
     @IsString()
-    titulo: string;
+    @IsOptional()
+    titulo?: string;
 
     @IsDate()
-    fecha_lanzamiento: Date;
+    @IsOptional()
+    fecha_lanzamiento?: Date;
+
+    @IsNumber()
+    @IsOptional()
+    autor?: Autor
+
+    @IsNumber()
+    @IsOptional()
+    canciones?: Cancion[]
 }

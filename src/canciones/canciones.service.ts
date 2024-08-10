@@ -5,20 +5,32 @@ import { Cancion } from './entities/cancion.entity';
 import { Repository } from 'typeorm';
 import { CreateCancionDto } from './dto/create-cancion.dto';
 import { UpdateCancionDto } from './dto/update-cancion.dto';
+// import { Genero } from 'src/generos/entities/genero.entity';
+// import { Album } from 'src/albums/entities/album.entity';
+// import { Autor } from 'src/autores/entities/autor.entity';
+// import { PlayList } from 'src/play-lists/entities/play-list.entity';
 
 @Injectable()
 export class CancionesService {
 
-    constructor(@InjectRepository(Cancion) private cancionRepository: Repository<Cancion>) {}
+    constructor(
+        @InjectRepository(Cancion) private cancionRepository: Repository<Cancion>,
+        // @InjectRepository(PlayList) private playlistRepository: Repository<PlayList>
+    ) {}
 
-    createCancion(cancion: CreateCancionDto) {
-        const newCancion = this.cancionRepository.create(cancion)
+    async createCancion(cancion: CreateCancionDto) {
+        
+        const newCancion = this.cancionRepository.create({
+            ...cancion,
+        })
 
         return this.cancionRepository.save(newCancion);
     }
 
     getCanciones() {
-        return this.cancionRepository.find()
+        return this.cancionRepository.find({
+            relations: ['album','autor','genero','playlists']
+        })
     }
 
     async getCancion(id: number) {
@@ -26,6 +38,7 @@ export class CancionesService {
             where: {
                 id,
             },
+            relations: ['album','autor','genero','playlists']
         });
 
         if(!cancionFound) {
@@ -36,7 +49,7 @@ export class CancionesService {
     }
 
     async updateCancion(id: number, cancion: UpdateCancionDto) {
-        const cancionFound = await this.cancionRepository.find({
+        const cancionFound = await this.cancionRepository.findOne({
             where: {
                 id,
             },

@@ -17,7 +17,9 @@ export class PlayListsService {
   }
 
   getPlaylists() {
-    return this.playlistsRepository.find();
+    return this.playlistsRepository.find({
+      relations: ['usuario','canciones']
+    });
   }
 
   async getPlaylist(id: number) {
@@ -26,7 +28,7 @@ export class PlayListsService {
         id,
       },
 
-      relations: ['usuario']
+      relations: ['usuario','canciones']
     });
 
     if(!playlistFound) {
