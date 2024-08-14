@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Usuario } from './entities/usuario.entity';
 import { Repository } from 'typeorm';
@@ -11,7 +11,19 @@ export class UsuariosService {
 
     constructor(@InjectRepository(Usuario) private usuariosRepository: Repository<Usuario>) {}
 
-    async createUsuario(usuarioDto: CreateUsuarioDto): Promise<Usuario> {
+    async validarUsuario(usuario: string, contraseña: string): Promise<{ success: boolean; usuario: Usuario }> {
+        const usuarioFound = await this.usuariosRepository.findOne({
+            where: { usuario, contraseña }
+        });
+    
+        if (!usuarioFound) {
+            throw new UnauthorizedException('Credenciales incorrectas');
+        }
+    
+        return { success: true, usuario: usuarioFound };
+    }
+
+    async createUsuario(usuarioDto: CreateUsuarioDto): Promise<{ success: boolean; usuario?: Usuario; message?: string }> {
 
         const { usuario } = usuarioDto
         const { email } = usuarioDto
@@ -37,7 +49,12 @@ export class UsuariosService {
         }
 
         const newUser = this.usuariosRepository.create(usuarioDto)
-        return await this.usuariosRepository.save(newUser)
+        const savedUser = await this.usuariosRepository.save(newUser)
+
+        return {
+            success: true,
+            usuario: savedUser
+          };
     }
 
     getUsuarios() {
